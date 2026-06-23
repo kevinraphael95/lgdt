@@ -17,10 +17,19 @@ const Sync = {
     if (!window.supabase) {
       throw new Error('Librairie Supabase non chargée.');
     }
-    this.client = window.supabase.createClient(url, anonKey);
-    localStorage.setItem('lg_sb_url', url);
-    localStorage.setItem('lg_sb_key', anonKey);
+    const cleanUrl = this.sanitizeUrl(url);
+    this.client = window.supabase.createClient(cleanUrl, anonKey.trim());
+    localStorage.setItem('lg_sb_url', cleanUrl);
+    localStorage.setItem('lg_sb_key', anonKey.trim());
     return this.client;
+  },
+
+  /* Nettoie les erreurs de copier-coller fréquentes sur l'URL du projet */
+  sanitizeUrl(url) {
+    let u = url.trim();
+    u = u.replace(/\/(rest|auth|realtime|storage)\/v1.*$/i, ''); // retire un suffixe d'API collé par erreur
+    u = u.replace(/\/+$/, ''); // retire les / de fin
+    return u;
   },
 
   /* Tente de se reconnecter avec les identifiants sauvegardés */
