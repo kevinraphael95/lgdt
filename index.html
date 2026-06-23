@@ -9,9 +9,7 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <!-- ░░ ÉCRANS ░░ -->
-
 <div id="screen-config" class="screen active">
   <div class="config-inner">
     <div class="logo-wrap">
@@ -21,7 +19,7 @@
     </div>
     <div class="config-card">
       <h2>Configuration Supabase</h2>
-      <p class="config-hint">Requis pour le multijoueur en ligne. Gratuit sur <a href="https://supabase.com" target="_blank">supabase.com</a></p>
+      <p class="config-hint">Requis pour le multijoueur en ligne. Gratuit sur <a href="https://supabase.com" target="_blank" rel="noopener">supabase.com</a></p>
       <div class="field-group">
         <label>URL du projet</label>
         <input id="sb-url" type="url" placeholder="https://xxxx.supabase.co" autocomplete="off">
@@ -87,12 +85,10 @@
         <div class="code-big" id="lobby-code-big">——</div>
         <button class="btn-ghost btn-copy" id="btn-copy-code">📋 Copier</button>
       </div>
-
       <div class="player-list-wrap">
         <p class="label-sm">Joueurs (<span id="player-count">0</span>)</p>
         <ul id="player-list" class="player-list"></ul>
       </div>
-
       <div class="host-controls" id="host-controls" style="display:none">
         <h3>Composition des rôles</h3>
         <div class="roles-config" id="roles-config"></div>
@@ -104,7 +100,6 @@
         <div class="waiting-pulse">⏳ En attente du Meneur…</div>
       </div>
     </div>
-
     <div class="lobby-right">
       <div class="roles-legend">
         <h3>Les rôles</h3>
@@ -120,7 +115,6 @@
     <span id="game-phase-label" class="phase-label">—</span>
     <span id="game-room-code" class="top-room"></span>
   </header>
-
   <div class="game-inner">
     <!-- Panneau joueur -->
     <div class="player-panel">
@@ -131,13 +125,11 @@
         <div class="role-desc-small" id="my-role-desc"></div>
         <div id="my-status-badge" class="status-badge alive">Vivant·e</div>
       </div>
-
       <div class="players-alive-wrap">
         <p class="label-sm">Joueurs (<span id="alive-count">0</span> vivants)</p>
         <ul id="players-alive-list" class="players-alive-list"></ul>
       </div>
     </div>
-
     <!-- Centre -->
     <div class="game-center">
       <div class="phase-display" id="phase-display">
@@ -145,7 +137,6 @@
         <h2 class="phase-title" id="phase-title">La nuit tombe sur Thiercelieu…</h2>
         <p class="phase-desc" id="phase-desc"></p>
       </div>
-
       <!-- Actions contextuelles -->
       <div class="action-zone" id="action-zone" style="display:none">
         <h3 id="action-title">Action</h3>
@@ -154,14 +145,12 @@
         <div id="action-buttons" class="action-buttons"></div>
         <div id="action-result" class="action-result" style="display:none"></div>
       </div>
-
       <!-- Log de jeu -->
       <div class="game-log-wrap">
         <p class="label-sm">Journal de la partie</p>
         <ul id="game-log" class="game-log"></ul>
       </div>
     </div>
-
     <!-- Panneau Meneur -->
     <div class="host-panel" id="host-panel" style="display:none">
       <h3>Meneur de Jeu</h3>
@@ -193,7 +182,9 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="game.js"></script>
+<script src="sync.js"></script>
 <script src="main.js"></script>
 </body>
 </html>

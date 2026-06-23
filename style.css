@@ -2,7 +2,6 @@
    LOUP-GAROU DE THIERCELIEU — UI v1.0
    Dark forest premium, Cinzel + Crimson Pro
    ═══════════════════════════════════════════ */
-
 :root {
   --night: #0a0c12;
   --deep: #0f1320;
@@ -27,11 +26,8 @@
   --shadow-lg: 0 24px 64px rgba(0,0,0,.7);
   --transition: .2s cubic-bezier(.4,0,.2,1);
 }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 html { font-size: 16px; }
-
 body {
   font-family: 'Crimson Pro', Georgia, serif;
   background: var(--night);
@@ -40,8 +36,6 @@ body {
   overflow-x: hidden;
   position: relative;
 }
-
-/* Stars background */
 body::before {
   content: '';
   position: fixed;
@@ -52,12 +46,8 @@ body::before {
   pointer-events: none;
   z-index: 0;
 }
-
-/* ── SCREENS ── */
 .screen { display: none; min-height: 100vh; position: relative; z-index: 1; }
 .screen.active { display: flex; flex-direction: column; }
-
-/* ── TOP BAR ── */
 .top-bar {
   display: flex;
   align-items: center;
@@ -70,7 +60,6 @@ body::before {
   top: 0;
   z-index: 100;
 }
-
 .top-logo {
   font-family: 'Cinzel', serif;
   font-weight: 900;
@@ -78,20 +67,16 @@ body::before {
   color: var(--moon);
   letter-spacing: .04em;
 }
-
 .top-room {
   font-family: 'Cinzel', serif;
   font-size: .8rem;
   color: var(--ink3);
   letter-spacing: .1em;
 }
-
-/* ── TYPOGRAPHY ── */
 h1, h2, h3 { font-family: 'Cinzel', serif; font-weight: 600; }
 h1 { font-size: clamp(1.8rem, 4vw, 3rem); line-height: 1.15; }
 h2 { font-size: clamp(1.2rem, 2.5vw, 1.8rem); }
 h3 { font-size: 1rem; font-weight: 600; letter-spacing: .06em; }
-
 .label-sm {
   font-family: 'Cinzel', serif;
   font-size: .7rem;
@@ -100,8 +85,6 @@ h3 { font-size: 1rem; font-weight: 600; letter-spacing: .06em; }
   text-transform: uppercase;
   margin-bottom: .5rem;
 }
-
-/* ── BUTTONS ── */
 .btn-primary {
   font-family: 'Cinzel', serif;
   font-size: .85rem;
@@ -119,7 +102,6 @@ h3 { font-size: 1rem; font-weight: 600; letter-spacing: .06em; }
 .btn-primary:hover { background: var(--moon2); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(245,215,110,.3); }
 .btn-primary:active { transform: translateY(0); }
 .btn-primary:disabled { opacity: .4; cursor: not-allowed; transform: none; }
-
 .btn-secondary {
   font-family: 'Cinzel', serif;
   font-size: .8rem;
@@ -132,7 +114,6 @@ h3 { font-size: 1rem; font-weight: 600; letter-spacing: .06em; }
   transition: var(--transition);
 }
 .btn-secondary:hover { border-color: var(--ink3); color: var(--ink); }
-
 .btn-ghost {
   background: transparent;
   border: none;
@@ -145,7 +126,6 @@ h3 { font-size: 1rem; font-weight: 600; letter-spacing: .06em; }
   transition: var(--transition);
 }
 .btn-ghost:hover { color: var(--ink); background: rgba(255,255,255,.05); }
-
 .btn-danger {
   background: var(--blood);
   color: #fff;
@@ -159,8 +139,6 @@ h3 { font-size: 1rem; font-weight: 600; letter-spacing: .06em; }
   transition: var(--transition);
 }
 .btn-danger:hover { background: var(--blood2); transform: translateY(-1px); }
-
-/* ── INPUTS ── */
 input[type="text"], input[type="url"] {
   font-family: 'Crimson Pro', serif;
   font-size: 1rem;
@@ -179,16 +157,11 @@ input[type="text"]:focus, input[type="url"]:focus {
   box-shadow: 0 0 0 3px rgba(245,215,110,.1);
 }
 input::placeholder { color: var(--ink3); }
-
-/* ══════════════════════════════════════════
-   SCREEN: CONFIG
-══════════════════════════════════════════ */
 #screen-config {
   align-items: center;
   justify-content: center;
   padding: 2rem 1rem;
 }
-
 .config-inner {
   width: 100%;
   max-width: 440px;
@@ -196,12 +169,10 @@ input::placeholder { color: var(--ink3); }
   flex-direction: column;
   gap: 2.5rem;
 }
-
 .logo-wrap { text-align: center; }
 .moon-icon { font-size: 3.5rem; line-height: 1; margin-bottom: .5rem; filter: drop-shadow(0 0 24px rgba(245,215,110,.4)); }
 .logo-title { font-size: 2.4rem; font-weight: 900; color: var(--moon); letter-spacing: .04em; }
 .logo-sub { font-size: 1rem; color: var(--ink2); margin-top: .25rem; font-style: italic; }
-
 .config-card {
   background: var(--card);
   border: 1px solid var(--border2);
@@ -212,14 +183,11 @@ input::placeholder { color: var(--ink3); }
   gap: 1.25rem;
   box-shadow: var(--shadow);
 }
-
 .config-card h2 { font-size: 1.1rem; color: var(--ink); }
 .config-hint { font-size: .9rem; color: var(--ink2); }
 .config-hint a { color: var(--moon); }
-
 .field-group { display: flex; flex-direction: column; gap: .4rem; }
-.field-group label { font-size: .85rem; color: var(--ink2); font-family: 'Cinzel', serif; font-size: .7rem; letter-spacing: .08em; }
-
+.field-group label { font-family: 'Cinzel', serif; font-size: .7rem; letter-spacing: .08em; color: var(--ink2); }
 .config-skip {
   text-align: center;
   font-size: .9rem;
@@ -230,12 +198,7 @@ input::placeholder { color: var(--ink3); }
   transition: color var(--transition);
 }
 .config-skip:hover { color: var(--ink2); }
-
-/* ══════════════════════════════════════════
-   SCREEN: HOME
-══════════════════════════════════════════ */
 #screen-home { flex-direction: column; }
-
 .home-inner {
   flex: 1;
   display: flex;
@@ -248,7 +211,6 @@ input::placeholder { color: var(--ink3); }
   margin: 0 auto;
   width: 100%;
 }
-
 .home-hero { text-align: center; }
 .moon-anim {
   font-size: 4rem;
@@ -261,16 +223,13 @@ input::placeholder { color: var(--ink3); }
   0%, 100% { filter: drop-shadow(0 0 20px rgba(245,215,110,.3)); transform: scale(1); }
   50% { filter: drop-shadow(0 0 40px rgba(245,215,110,.6)); transform: scale(1.04); }
 }
-
 .home-hero h1 { color: var(--ink); }
-
 .home-actions {
   display: flex;
   align-items: stretch;
   gap: 1.5rem;
   width: 100%;
 }
-
 .action-card {
   flex: 1;
   background: var(--card);
@@ -284,11 +243,9 @@ input::placeholder { color: var(--ink3); }
   transition: var(--transition);
 }
 .action-card:hover { border-color: rgba(255,255,255,.2); transform: translateY(-2px); }
-
 .action-icon { font-size: 2rem; }
 .action-card h3 { font-size: 1.1rem; color: var(--moon); }
 .action-card p { font-size: .95rem; color: var(--ink2); }
-
 .action-divider {
   display: flex;
   align-items: center;
@@ -296,7 +253,6 @@ input::placeholder { color: var(--ink3); }
   font-style: italic;
   font-size: 1.1rem;
 }
-
 .join-row { display: flex; gap: .5rem; }
 .code-input {
   font-family: 'Cinzel', serif !important;
@@ -305,7 +261,6 @@ input::placeholder { color: var(--ink3); }
   text-align: center;
   letter-spacing: .15em;
 }
-
 .username-section {
   display: flex;
   flex-direction: column;
@@ -316,12 +271,7 @@ input::placeholder { color: var(--ink3); }
 }
 .username-section label { color: var(--ink2); font-size: .9rem; }
 .username-row { display: flex; gap: .5rem; }
-
-/* ══════════════════════════════════════════
-   SCREEN: LOBBY
-══════════════════════════════════════════ */
 #screen-lobby { flex-direction: column; }
-
 .lobby-inner {
   flex: 1;
   display: grid;
@@ -332,9 +282,7 @@ input::placeholder { color: var(--ink3); }
   margin: 0 auto;
   width: 100%;
 }
-
 .lobby-left { display: flex; flex-direction: column; gap: 1.5rem; }
-
 .lobby-code-display {
   background: var(--card);
   border: 1px solid var(--border2);
@@ -345,7 +293,6 @@ input::placeholder { color: var(--ink3); }
   align-items: center;
   gap: .75rem;
 }
-
 .code-big {
   font-family: 'Cinzel', serif;
   font-size: 3rem;
@@ -354,9 +301,7 @@ input::placeholder { color: var(--ink3); }
   color: var(--moon);
   text-shadow: 0 0 30px rgba(245,215,110,.4);
 }
-
 .btn-copy { font-size: .85rem; }
-
 .player-list-wrap {
   background: var(--card);
   border: 1px solid var(--border2);
@@ -364,7 +309,6 @@ input::placeholder { color: var(--ink3); }
   padding: 1.5rem;
   flex: 1;
 }
-
 .player-list { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
 .player-item {
   display: flex;
@@ -399,7 +343,6 @@ input::placeholder { color: var(--ink3); }
   padding: 2px 6px;
 }
 .player-item.is-me { border-left: 2px solid var(--moon); }
-
 .host-controls {
   background: var(--card);
   border: 1px solid var(--border2);
@@ -410,9 +353,7 @@ input::placeholder { color: var(--ink3); }
   gap: 1rem;
 }
 .host-controls h3 { color: var(--moon); }
-
 .roles-config { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: .75rem; }
-
 .role-config-item {
   background: var(--card2);
   border: 1px solid var(--border);
@@ -424,7 +365,7 @@ input::placeholder { color: var(--ink3); }
 }
 .role-config-icon { font-size: 1.3rem; }
 .role-config-info { flex: 1; }
-.role-config-name { font-size: .85rem; font-weight: 600; font-family: 'Cinzel', serif; font-size: .75rem; letter-spacing: .05em; }
+.role-config-name { font-family: 'Cinzel', serif; font-size: .75rem; font-weight: 600; letter-spacing: .05em; }
 .role-config-count {
   display: flex;
   align-items: center;
@@ -455,7 +396,6 @@ input::placeholder { color: var(--ink3); }
   font-weight: 600;
   color: var(--moon);
 }
-
 .role-summary {
   font-size: .9rem;
   color: var(--ink2);
@@ -464,10 +404,8 @@ input::placeholder { color: var(--ink3); }
   padding: .75rem 1rem;
   border: 1px solid var(--border);
 }
-
 .btn-start { width: 100%; padding: 1rem; font-size: 1rem; }
 .start-hint { font-size: .85rem; color: var(--ink3); text-align: center; }
-
 .guest-waiting {
   flex: 1;
   display: flex;
@@ -481,7 +419,6 @@ input::placeholder { color: var(--ink3); }
   animation: waitPulse 2s ease-in-out infinite;
 }
 @keyframes waitPulse { 0%,100%{opacity:.5} 50%{opacity:1} }
-
 .lobby-right {}
 .roles-legend {
   background: var(--card);
@@ -492,9 +429,7 @@ input::placeholder { color: var(--ink3); }
   top: 72px;
 }
 .roles-legend h3 { color: var(--moon); margin-bottom: 1rem; }
-
 .roles-legend-list { display: flex; flex-direction: column; gap: .75rem; }
-
 .role-legend-item {
   display: flex;
   gap: .75rem;
@@ -510,14 +445,8 @@ input::placeholder { color: var(--ink3); }
   margin-bottom: .2rem;
 }
 .role-legend-desc { font-size: .82rem; color: var(--ink2); line-height: 1.4; }
-
-/* ══════════════════════════════════════════
-   SCREEN: GAME
-══════════════════════════════════════════ */
 #screen-game { flex-direction: column; }
-
 .game-bar { background: var(--deep); }
-
 .phase-label {
   font-family: 'Cinzel', serif;
   font-size: .85rem;
@@ -526,7 +455,6 @@ input::placeholder { color: var(--ink3); }
   animation: phaseGlow 2s ease-in-out infinite;
 }
 @keyframes phaseGlow { 0%,100%{opacity:.7} 50%{opacity:1} }
-
 .game-inner {
   flex: 1;
   display: grid;
@@ -535,8 +463,6 @@ input::placeholder { color: var(--ink3); }
   height: calc(100vh - 57px);
   overflow: hidden;
 }
-
-/* Player panel */
 .player-panel {
   border-right: 1px solid var(--border);
   display: flex;
@@ -546,7 +472,6 @@ input::placeholder { color: var(--ink3); }
   gap: 1rem;
   background: var(--deep);
 }
-
 .my-role-card {
   background: var(--card);
   border: 1px solid var(--border2);
@@ -562,7 +487,6 @@ input::placeholder { color: var(--ink3); }
 .role-icon-big { font-size: 3rem; line-height: 1; }
 .role-name-big { font-family: 'Cinzel', serif; font-size: .9rem; letter-spacing: .08em; color: var(--moon); }
 .role-desc-small { font-size: .8rem; color: var(--ink2); line-height: 1.35; }
-
 .status-badge {
   font-family: 'Cinzel', serif;
   font-size: .65rem;
@@ -574,7 +498,6 @@ input::placeholder { color: var(--ink3); }
 }
 .status-badge.alive { color: var(--sage2); border-color: var(--sage2); background: rgba(61,140,110,.1); }
 .status-badge.dead { color: var(--blood2); border-color: var(--blood2); background: rgba(184,50,50,.1); }
-
 .players-alive-wrap { flex: 1; }
 .players-alive-list { list-style: none; display: flex; flex-direction: column; gap: .4rem; }
 .player-alive-item {
@@ -594,8 +517,6 @@ input::placeholder { color: var(--ink3); }
 .player-alive-item.selectable:hover { background: rgba(245,215,110,.07); border-left: 2px solid var(--moon); }
 .player-alive-item.selected { background: rgba(245,215,110,.12); border-left: 2px solid var(--moon); color: var(--moon); }
 .player-alive-status { font-size: .9rem; }
-
-/* Game center */
 .game-center {
   display: flex;
   flex-direction: column;
@@ -603,7 +524,6 @@ input::placeholder { color: var(--ink3); }
   padding: 2rem 1.5rem;
   gap: 1.5rem;
 }
-
 .phase-display {
   text-align: center;
   padding: 2rem;
@@ -614,7 +534,6 @@ input::placeholder { color: var(--ink3); }
 .phase-icon { font-size: 3rem; margin-bottom: 1rem; }
 .phase-title { color: var(--moon); }
 .phase-desc { margin-top: .75rem; font-size: 1rem; color: var(--ink2); line-height: 1.5; }
-
 .action-zone {
   background: var(--card);
   border: 1px solid var(--moon);
@@ -624,7 +543,6 @@ input::placeholder { color: var(--ink3); }
 }
 .action-zone h3 { color: var(--moon); margin-bottom: .5rem; }
 #action-desc { color: var(--ink2); font-size: .95rem; margin-bottom: 1rem; }
-
 .action-targets { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
 .target-btn {
   font-family: 'Crimson Pro', serif;
@@ -639,9 +557,7 @@ input::placeholder { color: var(--ink3); }
 }
 .target-btn:hover { border-color: var(--moon); color: var(--moon); background: rgba(245,215,110,.07); }
 .target-btn.selected { border-color: var(--moon); color: var(--moon); background: rgba(245,215,110,.12); }
-
 .action-buttons { display: flex; gap: .75rem; flex-wrap: wrap; }
-
 .action-result {
   padding: 1rem;
   border-radius: var(--radius-sm);
@@ -651,7 +567,6 @@ input::placeholder { color: var(--ink3); }
   color: var(--ink);
   margin-top: 1rem;
 }
-
 .game-log-wrap { flex: 1; }
 .game-log { list-style: none; display: flex; flex-direction: column; gap: .35rem; }
 .log-entry {
@@ -667,8 +582,6 @@ input::placeholder { color: var(--ink3); }
 .log-entry.log-death { border-color: var(--blood); color: var(--blood2); }
 .log-entry.log-action { border-color: var(--sage); color: var(--sage2); }
 .log-entry.log-system { border-color: var(--border2); color: var(--ink3); font-style: italic; }
-
-/* Host panel */
 .host-panel {
   border-left: 1px solid var(--border);
   padding: 1rem;
@@ -679,7 +592,6 @@ input::placeholder { color: var(--ink3); }
   gap: 1rem;
 }
 .host-panel h3 { color: var(--moon); font-size: .85rem; }
-
 .host-phase-controls { display: flex; flex-direction: column; gap: .5rem; }
 .host-btn {
   font-family: 'Cinzel', serif;
@@ -698,9 +610,7 @@ input::placeholder { color: var(--ink3); }
 .host-btn:hover { border-color: var(--moon); color: var(--moon); }
 .host-btn.active { border-color: var(--moon); background: rgba(245,215,110,.08); color: var(--moon); }
 .host-btn.danger:hover { border-color: var(--blood2); color: var(--blood2); }
-
 .host-actions-zone { display: flex; flex-direction: column; gap: .75rem; }
-
 .host-vote-list { display: flex; flex-direction: column; gap: .4rem; }
 .host-vote-item {
   display: flex;
@@ -719,15 +629,10 @@ input::placeholder { color: var(--ink3); }
   overflow: hidden;
 }
 .host-vote-fill { height: 100%; background: var(--moon); border-radius: 2px; transition: width .4s; }
-
-/* ══════════════════════════════════════════
-   SCREEN: END
-══════════════════════════════════════════ */
 #screen-end {
   align-items: center;
   justify-content: center;
 }
-
 .end-inner {
   text-align: center;
   max-width: 640px;
@@ -737,13 +642,11 @@ input::placeholder { color: var(--ink3); }
   align-items: center;
   gap: 1.5rem;
 }
-
 .end-moon { font-size: 5rem; animation: moonPulse 3s ease-in-out infinite; }
 .end-title { font-size: clamp(2rem, 5vw, 4rem); }
 .end-title.wolves { color: var(--wolf2); }
 .end-title.village { color: var(--moon); }
 .end-subtitle { font-size: 1.1rem; color: var(--ink2); }
-
 .end-reveals {
   width: 100%;
   display: flex;
@@ -764,10 +667,6 @@ input::placeholder { color: var(--ink3); }
 .reveal-icon { font-size: 1.4rem; }
 .reveal-name { font-family: 'Cinzel', serif; font-size: .75rem; letter-spacing: .05em; }
 .reveal-role { font-size: .8rem; color: var(--ink2); }
-
-/* ══════════════════════════════════════════
-   TOAST
-══════════════════════════════════════════ */
 .toast {
   position: fixed;
   bottom: 2rem;
@@ -790,10 +689,6 @@ input::placeholder { color: var(--ink3); }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .toast.toast-success { border-color: var(--sage2); color: var(--sage2); }
 .toast.toast-error { border-color: var(--blood2); color: var(--blood2); }
-
-/* ══════════════════════════════════════════
-   MODAL
-══════════════════════════════════════════ */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -820,10 +715,6 @@ input::placeholder { color: var(--ink3); }
 .modal-box h3 { color: var(--moon); }
 .modal-box p { color: var(--ink2); font-size: .95rem; line-height: 1.5; }
 .modal-actions { display: flex; gap: .75rem; justify-content: flex-end; }
-
-/* ══════════════════════════════════════════
-   RESPONSIVE
-══════════════════════════════════════════ */
 @media (max-width: 900px) {
   .lobby-inner { grid-template-columns: 1fr; }
   .lobby-right { display: none; }
@@ -834,18 +725,13 @@ input::placeholder { color: var(--ink3); }
   .home-actions { flex-direction: column; }
   .action-divider { justify-content: center; }
 }
-
 @media (max-width: 600px) {
   .game-inner { height: auto; min-height: 100vh; }
   .code-big { font-size: 2rem; letter-spacing: .15em; }
   .roles-config { grid-template-columns: 1fr 1fr; }
 }
-
-/* Scrollbars */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.2); }
-
-/* Selection */
 ::selection { background: rgba(245,215,110,.2); color: var(--moon); }

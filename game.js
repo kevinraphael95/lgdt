@@ -2,7 +2,6 @@
    LOUP-GAROU — GAME ENGINE
    Rôles, phases, conditions de victoire
    ═══════════════════════════════════════════ */
-
 'use strict';
 
 /* ── RÔLES ── */
@@ -28,6 +27,8 @@ const ROLES = {
     min: 1,
     max: 6,
     default: 2,
+    hasNightAction: true,
+    nightOrder: 30,
   },
   voyante: {
     id: 'voyante',
@@ -54,7 +55,7 @@ const ROLES = {
     max: 1,
     default: 1,
     unique: true,
-    nightOrder: 20,
+    nightOrder: 40,
     hasNightAction: true,
   },
   chasseur: {
@@ -97,14 +98,6 @@ const ROLES = {
     default: 0,
     unique: true,
   },
-  maire: {
-    id: 'maire',
-    name: 'Maire',
-    icon: '🎖️',
-    team: 'village',
-    desc: 'Elu au premier tour, sa voix compte double lors des votes.',
-    configurable: false, // toujours présent comme rôle optionnel d'élection
-  },
 };
 
 /* ── PHASES ── */
@@ -123,17 +116,17 @@ const PHASES = {
 };
 
 const PHASE_INFO = {
-  [PHASES.PREPARATION]:   { icon: '🕯️',  label: 'Préparation',         night: true },
-  [PHASES.NUIT_CUPIDON]:  { icon: '💘',  label: 'Cupidon s\'éveille',  night: true },
-  [PHASES.NUIT_VOYANTE]:  { icon: '🔮',  label: 'La Voyante s\'éveille', night: true },
-  [PHASES.NUIT_LOUPS]:    { icon: '🐺',  label: 'Les Loups s\'éveillent', night: true },
-  [PHASES.NUIT_SORCIERE]: { icon: '🧙',  label: 'La Sorcière s\'éveille', night: true },
-  [PHASES.AUBE]:          { icon: '🌅',  label: 'L\'aube se lève',     night: false },
-  [PHASES.JOUR_DEBAT]:    { icon: '☀️',  label: 'Débat villageois',    night: false },
-  [PHASES.VOTE]:          { icon: '🗳️',  label: 'Vote du village',     night: false },
-  [PHASES.ELIMINATION]:   { icon: '💀',  label: 'Élimination',         night: false },
-  [PHASES.CHASSEUR]:      { icon: '🏹',  label: 'Le Chasseur tire',    night: false },
-  [PHASES.FIN]:           { icon: '🏁',  label: 'Fin de partie',       night: false },
+  [PHASES.PREPARATION]:   { icon: '🕯️', label: 'Préparation',          night: true,  desc: 'Le Meneur prépare la partie.' },
+  [PHASES.NUIT_CUPIDON]:  { icon: '💘', label: "Cupidon s'éveille",     night: true,  desc: 'Cupidon choisit deux amoureux.' },
+  [PHASES.NUIT_VOYANTE]:  { icon: '🔮', label: 'La Voyante s\'éveille', night: true,  desc: 'La Voyante sonde un joueur.' },
+  [PHASES.NUIT_LOUPS]:    { icon: '🐺', label: 'Les Loups s\'éveillent', night: true, desc: 'Les Loups choisissent leur victime.' },
+  [PHASES.NUIT_SORCIERE]: { icon: '🧙', label: 'La Sorcière s\'éveille', night: true, desc: 'La Sorcière décide du sort de la victime.' },
+  [PHASES.AUBE]:          { icon: '🌅', label: "L'aube se lève",        night: false, desc: 'Le village découvre les événements de la nuit.' },
+  [PHASES.JOUR_DEBAT]:    { icon: '☀️', label: 'Débat villageois',      night: false, desc: 'Les villageois débattent.' },
+  [PHASES.VOTE]:          { icon: '🗳️', label: 'Vote du village',       night: false, desc: 'Chacun vote pour éliminer un suspect.' },
+  [PHASES.ELIMINATION]:   { icon: '💀', label: 'Élimination',           night: false, desc: 'Le résultat du vote est révélé.' },
+  [PHASES.CHASSEUR]:      { icon: '🏹', label: 'Le Chasseur tire',       night: false, desc: 'Le Chasseur emporte quelqu\'un avec lui.' },
+  [PHASES.FIN]:           { icon: '🏁', label: 'Fin de partie',         night: false, desc: 'La partie est terminée.' },
 };
 
 /* ── ÉTAT DE JEU ── */
@@ -144,24 +137,26 @@ class GameState {
 
   reset() {
     this.roomCode = null;
-    this.players = {};       // { id: { id, name, role, alive, lover, mayor } }
+    this.hostId = null;
+    this.players = {};       // { id: { id, name, role, alive, isHost } }
     this.phase = PHASES.PREPARATION;
     this.round = 0;
     this.log = [];
-    this.nightVictim = null;      // joueur dévored by wolves
+    this.nightVictim = null;
     this.witchSave = false;
     this.witchKill = null;
     this.witchUsedSave = false;
     this.witchUsedKill = false;
-    this.seerTarget = null;
+    this.seerResult = null;       // { targetId, role } visible to seer only (we store, UI filters)
     this.wolfVotes = {};
     this.dayVotes = {};
-    this.lovers = [];             // [id1, id2]
+    this.lovers = [];
     this.mayorId = null;
-    this.pendingChasseur = null;  // joueur chasseur mort qui doit tirer
-    this.config = {};             // roleId -> count
+    this.pendingChasseur = null;
+    this.config = {};
     this.started = false;
     this.winner = null;
+    this.cupidonDone = false;
   }
 
   getPlayer(id) { return this.players[id]; }
@@ -169,7 +164,6 @@ class GameState {
   getDeadPlayers()  { return Object.values(this.players).filter(p => !p.alive); }
   getPlayersByRole(roleId) { return Object.values(this.players).filter(p => p.role === roleId); }
   getAliveByRole(roleId)   { return this.getAlivePlayers().filter(p => p.role === roleId); }
-
   getAliveWolves()   { return this.getAliveByRole('loup_garou'); }
   getAliveVillagers(){ return this.getAlivePlayers().filter(p => ROLES[p.role]?.team === 'village'); }
 
@@ -179,7 +173,16 @@ class GameState {
 
   checkWinCondition() {
     const wolves    = this.getAliveWolves();
-    const villagers = this.getAliveVillagers();
+    const villagers  = this.getAliveVillagers();
+
+    // Amoureux : si les deux amoureux sont les seuls vivants (équipes opposées ou non)
+    if (this.lovers.length === 2) {
+      const alive = this.getAlivePlayers();
+      if (alive.length === 2 && alive.every(p => this.lovers.includes(p.id))) {
+        this.winner = 'amoureux';
+        return 'amoureux';
+      }
+    }
 
     if (wolves.length === 0) {
       this.winner = 'village';
@@ -188,15 +191,6 @@ class GameState {
     if (wolves.length >= villagers.length) {
       this.winner = 'loups';
       return 'loups';
-    }
-    // Amoureux : si les deux amoureux sont les seuls vivants d'équipes opposées
-    if (this.lovers.length === 2) {
-      const [l1, l2] = this.lovers.map(id => this.players[id]);
-      const alive = this.getAlivePlayers();
-      if (alive.length === 2 && alive.every(p => this.lovers.includes(p.id))) {
-        this.winner = 'amoureux';
-        return 'amoureux';
-      }
     }
     return null;
   }
@@ -208,14 +202,13 @@ class GameState {
     const dead = [playerId];
     this.addLog(`💀 ${p.name} est mort·e.${reason ? ' (' + reason + ')' : ''}`, 'death');
 
-    // Amoureux : si l'un meurt, l'autre aussi
     if (this.lovers.includes(playerId)) {
       const loverId = this.lovers.find(id => id !== playerId);
       const lover = this.players[loverId];
       if (lover && lover.alive) {
         lover.alive = false;
         dead.push(loverId);
-        this.addLog(`💘 ${lover.name} meurt de chagrin (amour).`, 'death');
+        this.addLog(`💘 ${lover.name} meurt de chagrin.`, 'death');
       }
     }
     return dead;
@@ -226,13 +219,12 @@ class GameState {
     for (const [roleId, count] of Object.entries(config)) {
       for (let i = 0; i < count; i++) roleList.push(roleId);
     }
-    // Shuffle Fisher-Yates
     for (let i = roleList.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [roleList[i], roleList[j]] = [roleList[j], roleList[i]];
     }
     playerIds.forEach((id, idx) => {
-      if (this.players[id]) this.players[id].role = roleList[idx];
+      if (this.players[id]) this.players[id].role = roleList[idx] || 'villageois';
     });
   }
 
@@ -248,27 +240,10 @@ class GameState {
     return { winner: winners.length === 1 ? winners[0] : null, tally, tied: winners.length > 1, tiedPlayers: winners };
   }
 
-  getNextPhases() {
-    const phases = [];
-    const hasCupidon  = this.getAliveByRole('cupidon').length > 0 && this.round === 0;
-    const hasVoyante  = this.getAliveByRole('voyante').length > 0;
-    const hasSorciere = this.getAliveByRole('sorciere').length > 0;
-    const hasWolves   = this.getAliveWolves().length > 0;
-
-    if (hasCupidon)  phases.push(PHASES.NUIT_CUPIDON);
-    if (hasVoyante)  phases.push(PHASES.NUIT_VOYANTE);
-    if (hasWolves)   phases.push(PHASES.NUIT_LOUPS);
-    if (hasSorciere) phases.push(PHASES.NUIT_SORCIERE);
-    phases.push(PHASES.AUBE);
-    phases.push(PHASES.JOUR_DEBAT);
-    phases.push(PHASES.VOTE);
-    phases.push(PHASES.ELIMINATION);
-    return phases;
-  }
-
   toJSON() {
     return {
       roomCode: this.roomCode,
+      hostId: this.hostId,
       players: this.players,
       phase: this.phase,
       round: this.round,
@@ -278,6 +253,7 @@ class GameState {
       witchKill: this.witchKill,
       witchUsedSave: this.witchUsedSave,
       witchUsedKill: this.witchUsedKill,
+      seerResult: this.seerResult,
       wolfVotes: this.wolfVotes,
       dayVotes: this.dayVotes,
       lovers: this.lovers,
@@ -286,10 +262,12 @@ class GameState {
       config: this.config,
       started: this.started,
       winner: this.winner,
+      cupidonDone: this.cupidonDone,
     };
   }
 
   fromJSON(data) {
+    if (!data) return this;
     Object.assign(this, data);
     return this;
   }
@@ -308,17 +286,14 @@ function generateUserId() {
 }
 
 function getDefaultConfig(playerCount) {
-  // Heuristique : nb loups ≈ 1 pour 4 joueurs
   const wolves = Math.max(1, Math.floor(playerCount / 4));
   const hasVoyante = playerCount >= 5;
   const hasSorciere = playerCount >= 7;
   const hasCupidon = playerCount >= 8;
-
   const config = { loup_garou: wolves };
   if (hasVoyante)  config.voyante = 1;
   if (hasSorciere) config.sorciere = 1;
   if (hasCupidon)  config.cupidon = 1;
-
   const specials = wolves + (hasVoyante ? 1 : 0) + (hasSorciere ? 1 : 0) + (hasCupidon ? 1 : 0);
   config.villageois = Math.max(0, playerCount - specials);
   return config;
