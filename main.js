@@ -6,6 +6,7 @@
 'use strict';
 
 const App = {
+  MIN_PLAYERS: 5,
   game: new window.LG.GameState(),
   myId: null,
   myName: null,
@@ -442,10 +443,12 @@ const App = {
   updateRoleSummary(playerCount) {
     const total = window.LG.countRoleTotal(this.game.config);
     const wolves = this.game.config.loup_garou || 0;
-    const ok = total === playerCount && wolves >= 1;
+    const enoughPlayers = playerCount >= this.MIN_PLAYERS;
+    const ok = total === playerCount && wolves >= 1 && enoughPlayers;
 
     this.els.roleSummary.innerHTML = `
       <strong>${total}</strong> rôle(s) assigné(s) pour <strong>${playerCount}</strong> joueur(s).
+      ${!enoughPlayers ? `<br>⚠️ Il faut au moins ${this.MIN_PLAYERS} joueurs pour lancer une partie (${playerCount}/${this.MIN_PLAYERS}).` : ''}
       ${total !== playerCount ? `<br>⚠️ Le total doit être exactement égal au nombre de joueurs.` : ''}
       ${wolves < 1 ? `<br>⚠️ Il faut au moins un Loup-Garou.` : ''}
     `;
@@ -453,7 +456,9 @@ const App = {
     this.els.btnStartGame.disabled = !ok;
     this.els.startHint.innerText = ok
       ? 'Tout est prêt !'
-      : 'Ajuste la composition pour pouvoir lancer la partie.';
+      : (!enoughPlayers
+          ? `En attente de joueurs (${playerCount}/${this.MIN_PLAYERS} minimum)…`
+          : 'Ajuste la composition pour pouvoir lancer la partie.');
   },
 
   handleCopyCode() {
@@ -480,6 +485,10 @@ const App = {
 
   async handleStartGame() {
     const playerIds = Object.keys(this.game.players);
+    if (playerIds.length < this.MIN_PLAYERS) {
+      this.showToast(`Il faut au moins ${this.MIN_PLAYERS} joueurs pour lancer la partie.`, 'error');
+      return;
+    }
     const total = window.LG.countRoleTotal(this.game.config);
     if (total !== playerIds.length) {
       this.showToast('La composition des rôles ne correspond pas au nombre de joueurs.', 'error');
