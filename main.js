@@ -263,8 +263,8 @@ const App = {
       this.subscribeToGame();
       this.enterLobby();
     } catch (e) {
-      console.error(e);
-      this.showToast('Impossible de créer la partie. Vérifie ta config Supabase.', 'error');
+      this.logSupabaseError('Création de partie', e);
+      this.showToast(this.describeSupabaseError(e), 'error');
     }
   },
 
@@ -309,8 +309,8 @@ const App = {
       this.subscribeToGame();
       this.enterLobby();
     } catch (e) {
-      console.error(e);
-      this.showToast('Erreur de connexion à la partie.', 'error');
+      this.logSupabaseError('Rejoindre une partie', e);
+      this.showToast(this.describeSupabaseError(e), 'error');
     }
   },
 
@@ -1035,6 +1035,40 @@ const App = {
   /* ────────────────────────────────────────
      UTILITAIRES
   ──────────────────────────────────────── */
+  logSupabaseError(context, e) {
+    const details = {
+      message: e?.message,
+      details: e?.details,
+      hint: e?.hint,
+      code: e?.code,
+      status: e?.status,
+    };
+    console.error(`[Supabase] ${context}:`, details, e);
+  },
+
+  describeSupabaseError(e) {
+    const msg = e?.message || '';
+    if (e?.code === '42P01' || /relation .* does not exist/i.test(msg)) {
+      return 'La table "games" n\'existe pas. Relance le script SQL dans Supabase.';
+    }
+    if (e?.status === 404 || /not found/i.test(msg)) {
+      return 'Adresse Supabase introuvable (404). Vérifie que l\'URL du projet ne contient PAS "/rest/v1" à la fin.';
+    }
+    if (e?.code === '23505' || /duplicate key/i.test(msg)) {
+      return 'Ce code de partie existe déjà, réessaie.';
+    }
+    if (/row-level security|permission denied|RLS/i.test(msg) || e?.code === '42501') {
+      return 'Accès refusé par Supabase (Row Level Security). Vérifie les policies de la table "games".';
+    }
+    if (/Failed to fetch|NetworkError|fetch/i.test(msg) || e?.status === 0) {
+      return 'Impossible de contacter Supabase. Vérifie l\'URL du projet.';
+    }
+    if (e?.status === 401 || e?.status === 403 || /JWT|api key/i.test(msg)) {
+      return 'Clé anonyme invalide ou rejetée par Supabase.';
+    }
+    return msg ? `Erreur Supabase : ${msg}` : 'Erreur inconnue. Regarde la console (F12) pour plus de détails.';
+  },
+
   escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
