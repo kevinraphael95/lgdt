@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loup-Garou de Thiercelieu — En ligne</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ░░ ÉCRANS ░░ -->
+
+<div id="screen-config" class="screen active">
+  <div class="config-inner">
+    <div class="logo-wrap">
+      <div class="moon-icon">🌕</div>
+      <h1 class="logo-title">Loup-Garou</h1>
+      <p class="logo-sub">de Thiercelieu</p>
+    </div>
+    <div class="config-card">
+      <h2>Configuration Supabase</h2>
+      <p class="config-hint">Requis pour le multijoueur en ligne. Gratuit sur <a href="https://supabase.com" target="_blank">supabase.com</a></p>
+      <div class="field-group">
+        <label>URL du projet</label>
+        <input id="sb-url" type="url" placeholder="https://xxxx.supabase.co" autocomplete="off">
+      </div>
+      <div class="field-group">
+        <label>Clé anonyme (anon key)</label>
+        <input id="sb-key" type="text" placeholder="eyJhbGci..." autocomplete="off">
+      </div>
+      <button class="btn-primary" id="btn-save-config">Connexion →</button>
+      <p class="config-skip" id="btn-demo">Tester en mode démo (solo/local)</p>
+    </div>
+  </div>
+</div>
+
+<div id="screen-home" class="screen">
+  <header class="top-bar">
+    <span class="top-logo">🐺 Loup-Garou</span>
+    <span class="top-room" id="header-username"></span>
+  </header>
+  <div class="home-inner">
+    <div class="home-hero">
+      <div class="moon-anim">🌕</div>
+      <h1>Le village dort.<br>Mais les loups, eux…</h1>
+    </div>
+    <div class="home-actions">
+      <div class="action-card" id="card-create">
+        <div class="action-icon">🏠</div>
+        <h3>Créer une partie</h3>
+        <p>Deviens le Meneur de Jeu</p>
+        <button class="btn-primary" id="btn-create">Créer</button>
+      </div>
+      <div class="action-divider">ou</div>
+      <div class="action-card" id="card-join">
+        <div class="action-icon">🔑</div>
+        <h3>Rejoindre</h3>
+        <p>Entre le code de la partie</p>
+        <div class="join-row">
+          <input id="join-code" type="text" maxlength="6" placeholder="ABC123" class="code-input">
+          <button class="btn-primary" id="btn-join">OK</button>
+        </div>
+      </div>
+    </div>
+    <div class="username-section">
+      <label>Ton pseudo</label>
+      <div class="username-row">
+        <input id="username-input" type="text" maxlength="20" placeholder="VillageoisXYZ">
+        <button class="btn-secondary" id="btn-set-username">✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="screen-lobby" class="screen">
+  <header class="top-bar">
+    <button class="btn-ghost" id="btn-leave-lobby">← Quitter</button>
+    <span class="top-logo">🐺 Loup-Garou</span>
+    <span class="top-room" id="lobby-room-code"></span>
+  </header>
+  <div class="lobby-inner">
+    <div class="lobby-left">
+      <div class="lobby-code-display">
+        <p class="label-sm">Code de la partie</p>
+        <div class="code-big" id="lobby-code-big">——</div>
+        <button class="btn-ghost btn-copy" id="btn-copy-code">📋 Copier</button>
+      </div>
+
+      <div class="player-list-wrap">
+        <p class="label-sm">Joueurs (<span id="player-count">0</span>)</p>
+        <ul id="player-list" class="player-list"></ul>
+      </div>
+
+      <div class="host-controls" id="host-controls" style="display:none">
+        <h3>Composition des rôles</h3>
+        <div class="roles-config" id="roles-config"></div>
+        <div class="role-summary" id="role-summary"></div>
+        <button class="btn-primary btn-start" id="btn-start-game">Lancer la partie ▶</button>
+        <p class="start-hint" id="start-hint"></p>
+      </div>
+      <div class="guest-waiting" id="guest-waiting">
+        <div class="waiting-pulse">⏳ En attente du Meneur…</div>
+      </div>
+    </div>
+
+    <div class="lobby-right">
+      <div class="roles-legend">
+        <h3>Les rôles</h3>
+        <div id="roles-legend-list" class="roles-legend-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="screen-game" class="screen">
+  <header class="top-bar game-bar">
+    <span class="top-logo">🐺 Loup-Garou</span>
+    <span id="game-phase-label" class="phase-label">—</span>
+    <span id="game-room-code" class="top-room"></span>
+  </header>
+
+  <div class="game-inner">
+    <!-- Panneau joueur -->
+    <div class="player-panel">
+      <div class="my-role-card" id="my-role-card">
+        <p class="label-sm">Ton rôle</p>
+        <div class="role-icon-big" id="my-role-icon">?</div>
+        <div class="role-name-big" id="my-role-name">—</div>
+        <div class="role-desc-small" id="my-role-desc"></div>
+        <div id="my-status-badge" class="status-badge alive">Vivant·e</div>
+      </div>
+
+      <div class="players-alive-wrap">
+        <p class="label-sm">Joueurs (<span id="alive-count">0</span> vivants)</p>
+        <ul id="players-alive-list" class="players-alive-list"></ul>
+      </div>
+    </div>
+
+    <!-- Centre -->
+    <div class="game-center">
+      <div class="phase-display" id="phase-display">
+        <div class="phase-icon" id="phase-icon">🌙</div>
+        <h2 class="phase-title" id="phase-title">La nuit tombe sur Thiercelieu…</h2>
+        <p class="phase-desc" id="phase-desc"></p>
+      </div>
+
+      <!-- Actions contextuelles -->
+      <div class="action-zone" id="action-zone" style="display:none">
+        <h3 id="action-title">Action</h3>
+        <p id="action-desc"></p>
+        <div id="action-targets" class="action-targets"></div>
+        <div id="action-buttons" class="action-buttons"></div>
+        <div id="action-result" class="action-result" style="display:none"></div>
+      </div>
+
+      <!-- Log de jeu -->
+      <div class="game-log-wrap">
+        <p class="label-sm">Journal de la partie</p>
+        <ul id="game-log" class="game-log"></ul>
+      </div>
+    </div>
+
+    <!-- Panneau Meneur -->
+    <div class="host-panel" id="host-panel" style="display:none">
+      <h3>Meneur de Jeu</h3>
+      <div class="host-phase-controls" id="host-phase-controls"></div>
+      <div class="host-actions-zone" id="host-actions-zone"></div>
+    </div>
+  </div>
+</div>
+
+<div id="screen-end" class="screen">
+  <div class="end-inner">
+    <div class="end-moon" id="end-moon">🌕</div>
+    <h1 class="end-title" id="end-title">—</h1>
+    <p class="end-subtitle" id="end-subtitle"></p>
+    <div class="end-reveals" id="end-reveals"></div>
+    <button class="btn-primary" id="btn-play-again">Rejouer</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Modal -->
+<div id="modal-overlay" class="modal-overlay" style="display:none">
+  <div class="modal-box" id="modal-box">
+    <h3 id="modal-title"></h3>
+    <p id="modal-body"></p>
+    <div class="modal-actions" id="modal-actions"></div>
+  </div>
+</div>
+
+<script src="game.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
